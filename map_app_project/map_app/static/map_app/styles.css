@@ -1,0 +1,81 @@
+/* map_app/static/map_app/css/styles.css */
+
+/* CSS styles for the navigation bar */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+
+.navbar {
+    background-color: #333333;
+    color: white;
+    padding: 10px;
+    text-align: right; /* Align the elements to the right */
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navbar-title {
+    font-size: 24px;
+}
+
+.navbar-menu {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* CSS styles for the menu */
+.menu {
+    display: none;
+    background-color: #444;
+    color: white;
+    padding: 10px;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    z-index: 1;
+}
+
+.menu-item {
+    padding: 5px;
+    
+}
+
+/* CSS styles to make the map responsive for mobile devices */
+#googleMap {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.center-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    align-items: center;
+    justify-items: center;
+}
+
+.grid-item {
+    padding: 10px;
+    text-align: center;
+}

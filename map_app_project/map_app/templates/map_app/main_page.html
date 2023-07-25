@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map App</title>
+    <link rel="stylesheet" href="{% static 'map_app/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'map_app/css/modal.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+        var locations = JSON.parse('{{ locations|escapejs }}');
+        
+            locations.forEach(location => {
+                const marker = new google.maps.Marker({
+                    position: { lat: parseFloat(location.fields.lat), lng: parseFloat(location.fields.lng) },
+                    map: map,
+                    title: location.fields.name,
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    // Update the modal title
+                    document.getElementById('locationModalLabel').innerText = location.fields.name;
+
+                    // Update the location details
+                    document.getElementById('locationName').innerText = location.fields.name;
+
+                    // Check if image properties are available before setting it
+                    var imageUrl = "";
+                    if (location.fields.images && location.fields.images.length > 0 && location.fields.images[0].fields) {
+                        imageUrl = location.fields.images[0].fields.image_url || "";  // If image_url is undefined, set it to empty string
+                    } 
+                    document.getElementById('locationImage').src = imageUrl;
+                    
+                    document.getElementById('locationRating').innerText = 'Rating: ' + location.fields.rating;  // Assuming rating is available
+                    document.getElementById('locationAddress').innerText = 'Address: ' + location.fields.address;  // Assuming address is available
+
+                    // Show the modal
+                    $('#locationModal').modal('show');
+                });
+
+            });
+        
+    </script>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <!-- REMOVE the callback=initMap from here -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-JoFtnudmVWsWiYHuDoY5B_GFyqDO3uQ&map_id=8e0a97af9386fef&libraries=places" async defer></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <!-- Add the navigation bar at the top -->
+        <div class="navbar">
+            <div class="navbar-title">My Map App</div>
+            <div class="navbar-menu" onclick="toggleMenu()">☰</div> <!-- Hamburger button -->
+        </div>
+    
+        <!-- Placeholder menu initially hidden -->
+        <div class="menu" id="menu" style="display:none;">
+            <div class="menu-item">Placeholder for Pop-up 1</div>
+            <div class="menu-item">Placeholder for Pop-up 2</div>
+            <!-- Add more menu items as needed -->
+        </div>
+    
+        <!-- Place the map inside a container for responsive styling -->
+        <div id="googleMap"></div>
+    
+                <!-- Bootstrap Modal -->
+                <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="locationModalLabel">Location Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="locationModalBody">
+                                <div class="grid-container">
+                                    <div class="center-image">
+                                        <img id="locationImage" src="" alt="Location Image" />
+                                    </div>
+                                    <div class="grid-item" id="coverCharge"><i class="fas fa-dollar-sign"></i> Cover Charge: Placeholder</div>
+                                    <div class="grid-item" id="locationRating"><i class="fas fa-star"></i></div>
+                                    <div class="grid-item" id="locationType"><i class="fas fa-tag"></i> Category: Placeholder</div>
+                                    <div class="grid-item" id="locationAddress"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div class="grid-item" id="locationURL"><i class="fas fa-link"></i> Website: <a href="##LOCATION_URL##" target="_blank">Visit Site</a></div>
+                                    <div class="grid-item" id="affiliateAppURL"><i class="fas fa-mobile-alt"></i> Apps: <a href="##AFFILIATE_APP_URL##" target="_blank">Get the App</a></div>
+                                    <div class="grid-item">Est. Wait: 8 mins</div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add a new script tag to call the initMap function when the window loads -->
+                <script>
+                    window.onload = function() {
+                        initMap();
+                    };
+
+                // Modify the initMap function to include the correct image URLs
+                var locations = JSON.parse('{{ locations|escapejs }}');
+                function initMap() {
+                    const unionSquare = { lat: 40.7359, lng: -73.9911 };  // Union Square, NYC
+                    const mapOptions = {
+                        center: unionSquare,
+                        zoom: 15,
+                        disableDefaultUI: true,
+                        center: unionSquare,
+                        disableDefaultUI: true,
+                        styles: [
+                            { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+                            { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+                            { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+                            {
+                                featureType: "administrative.locality",
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#d59563" }],
+                            },
+                            {
+                                featureType: "poi", // Hides points of interest
+                                stylers: [{ visibility: "off" }],
+                            },
+                            {
+                                featureType: "poi.park",
+                                elementType: "geometry",
+                                stylers: [{ color: "#263c3f" }],
+                            },
+                            {
+                                featureType: "poi.park",
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#6b9a76" }],
+                            },
+                            {
+                                featureType: "road",
+                                elementType: "geometry",
+                                stylers: [{ color: "#38414e" }],
+                            },
+                            {
+                                featureType: "road",
+                                elementType: "geometry.stroke",
+                                stylers: [{ color: "#212a37" }],
+                            },
+                            {
+                                featureType: "road",
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#9ca5b3" }],
+                            },
+                            {
+                                featureType: "road.highway",
+                                elementType: "geometry",
+                                stylers: [{ color: "#746855" }],
+                            },
+                            {
+                                featureType: "road.highway",
+                                elementType: "geometry.stroke",
+                                stylers: [{ color: "#1f2835" }],
+                            },
+                            {
+                                featureType: "road.highway",
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#f3d19c" }],
+                            },
+                            {
+                                featureType: "transit",
+                                elementType: "geometry",
+                                stylers: [{ color: "#2f3948" }],
+                            },
+                            {
+                                featureType: "transit.station",
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#d59563" }],
+                            },
+                            {
+                                featureType: "water",
+                                elementType: "geometry",
+                                stylers: [{ color: "#17263c" }],
+                            },
+                            {
+                                featureType: "water",
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#515c6d" }],
+                            },
+                            {
+                                featureType: "water",
+                                elementType: "labels.text.stroke",
+                                stylers: [{ color: "#17263c" }],
+                            },
+                            {
+                                featureType: "administrative.neighborhood", // Show neighborhoods
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#d59563" }],
+                            },
+                            {
+                                featureType: "administrative.locality", // Show localities (towns and cities)
+                                elementType: "labels.text.fill",
+                                stylers: [{ color: "#d59563" }],
+                            }
+                            ],
+                    };
+                    const map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
+
+                    locations.forEach(location => {
+                        const marker = new google.maps.Marker({
+                            position: { lat: parseFloat(location.fields.lat), lng: parseFloat(location.fields.lng) },
+                            map: map,
+                            title: location.fields.name,
+                        });
+
+                        google.maps.event.addListener(marker, 'click', function() {
+                            document.getElementById('locationModalLabel').innerText = location.fields.name;
+
+                            var imageUrl = "";
+                            if (location.fields.images && location.fields.images.length > 0) {
+                                imageUrl = location.fields.images[0];  // The first image URL
+                            }
+                            document.getElementById('locationImage').src = imageUrl;
+                            
+                            document.getElementById('locationRating').innerText = 'Rating: ' + location.fields.rating;
+                            document.getElementById('locationAddress').innerText = 'Address: ' + location.fields.address;
+
+                            // Show the modal
+                            $('#locationModal').modal('show');
+                        });
+                    });
+                }
+            </script>
+            </body>
+        </html>
+        

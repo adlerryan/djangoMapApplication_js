@@ -1,0 +1,102 @@
+:root {
+    --primary-color: #333;
+    --secondary-color: #444444;
+    --background-color: transparent; /* updated */
+    --light-color: #fff;
+    --dark-color: #222;
+    --accent-color: #f1c40f; /* gold */
+    --modal-color: #800080; /* purple */
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    padding: 10px;
+    background-color: var(--background-color);
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    grid-auto-flow: row;
+}
+
+.grid-item {
+    background-color: var(--light-color);
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    color: var(--primary-color);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.center-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--light-color);
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    grid-column: span 1;
+}
+
+.center-image img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px;
+}
+
+.modal-content {
+    background: var(--background-color); /* updated */
+    border-radius: 15px;
+}
+
+.modal-header {
+    background: var(--modal-color); /* updated */
+    color: var(--light-color);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.modal-footer {
+    background: var(--modal-color); /* updated */
+    color: var(--light-color);
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.modal-title {
+    color: var(--light-color);
+}
+
+.modal-close {
+    color: var(--light-color);
+}
+
+@media (min-width: 400px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .center-image {
+        grid-column: span 3;
+    }
+
+    .grid-item {
+        font-size: 15px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .center-image {
+        grid-column: span 3;
+    }
+
+    .grid-item {
+        font-size: 30px;
+    }
+}
