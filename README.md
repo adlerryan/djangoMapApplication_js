@@ -1,6 +1,8 @@
 # Map Application with Django and Google Maps API
 This is a Django project for a Map Application that utilizes the Google Maps API to display locations on a map and allows users to view location details in a modal. The project includes front-end code written in HTML, CSS, and JavaScript, as well as a Django backend for managing location data.
 
+# Update
+- Stopped development on this because I wanted to start using the same setup but have a front end that uses React.js. Please see other projects.
 ## Front-end
 The front-end of the application is built using HTML, CSS, and JavaScript. Here are the key components:
 
